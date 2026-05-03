@@ -23,13 +23,7 @@ Build your own version — don’t just copy.
 
 ---
 
-## 🛠️ Instructions
 
-I have modified the GSAP Club plugins using trial versions.  
-⚠️ Note: Trial plugins cannot be used for production or hosting.
-
-
----
 
 ## ⚙️ Tech Stack
 
