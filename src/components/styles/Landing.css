@@ -15,7 +15,7 @@
 .landing-circle1 {
   top: 0%;
   left: 0%;
-  z-index: 15;
+  z-index: 6;
   position: fixed;
   width: 300px;
   height: 300px;
@@ -24,6 +24,8 @@
   filter: blur(60px);
   border-radius: 50%;
   animation: loadingCircle 5s linear infinite;
+  pointer-events: none;
+  opacity: 0.5;
 }
 .nav-fade {
   position: fixed;
@@ -53,7 +55,7 @@
   top: 50%;
   right: 0%;
   transform: translate(calc(100% - 2px), -50%);
-  z-index: 9;
+  z-index: 5;
   position: fixed;
   display: none;
   width: 300px;
@@ -63,6 +65,8 @@
   filter: blur(50px);
   border-radius: 50%;
   animation: loadingCircle2 5s linear infinite;
+  pointer-events: none;
+  opacity: 0.4;
 }
 @keyframes loadingCircle2 {
   100% {

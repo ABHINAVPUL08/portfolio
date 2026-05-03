@@ -208,13 +208,15 @@
   height: 100%;
   overflow: hidden;
 }
+.what-noTouch:hover .what-content-in,
+.what-content-active .what-content-in {
+  overflow: visible;
+}
 .what-content-in h5 {
   font-weight: 300;
-  opacity: 0.5;
   font-size: 12px;
   letter-spacing: 1px;
   font-family: "Geist", sans-serif;
-  margin-bottom: 5px;
 }
 @keyframes whatBorders {
   80% {
@@ -239,6 +241,30 @@
   border: 1px solid #ffffff50;
   border-radius: 30px;
 }
+
+/* Skills: full visibility only on hovered / active panel (both DEVELOP & ANALYZE) */
+.what-content h5,
+.what-content .what-content-flex {
+  opacity: 0;
+  max-height: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  transition: opacity 0.35s ease, max-height 0.45s ease, margin 0.35s ease;
+}
+.what-noTouch:hover h5,
+.what-content-active h5,
+.what-noTouch:hover .what-content-flex,
+.what-content-active .what-content-flex {
+  opacity: 1;
+  max-height: 280px;
+  margin-bottom: 5px;
+}
+.what-noTouch:hover h5,
+.what-content-active h5 {
+  max-height: 3rem;
+  opacity: 0.75;
+}
+
 @media only screen and (max-width: 1600px) {
   .what-box h2 {
     margin-right: 18%;
@@ -339,17 +365,6 @@
   .what-box-in {
     margin-left: 0px;
     height: 450px;
-  }
-  .what-content h5,
-  .what-content-flex {
-    opacity: 0;
-    transition: 0.3s;
-  }
-  .what-noTouch:hover h5,
-  .what-content-active h5,
-  .what-noTouch:hover .what-content-flex,
-  .what-content-active .what-content-flex {
-    opacity: 1;
   }
   .what-content {
     padding: 30px;

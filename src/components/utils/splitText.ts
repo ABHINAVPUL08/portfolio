@@ -16,10 +16,22 @@ export default function setSplitText() {
   const paras: NodeListOf<ParaElement> = document.querySelectorAll(".para");
   const titles: NodeListOf<ParaElement> = document.querySelectorAll(".title");
 
-  const TriggerStart = window.innerWidth <= 1024 ? "top 60%" : "20% 60%";
+  /* Fire as soon as the section enters from below (readable against ScrollSmoother) */
+  const TriggerStart =
+    window.innerWidth <= 1024 ? "top 75%" : "top bottom";
   const ToggleAction = "play pause resume reverse";
 
   paras.forEach((para: ParaElement) => {
+    /* About body: keep a single normal paragraph (SplitText lines/words break flow) */
+    if (para.closest(".about-section")) {
+      if (para.anim) {
+        para.anim.progress(1).kill();
+        para.split?.revert();
+      }
+      para.classList.add("visible");
+      return;
+    }
+
     para.classList.add("visible");
     if (para.anim) {
       para.anim.progress(1).kill();
@@ -40,6 +52,7 @@ export default function setSplitText() {
           trigger: para.parentElement?.parentElement,
           toggleActions: ToggleAction,
           start: TriggerStart,
+          once: true,
         },
         duration: 1,
         ease: "power3.out",
@@ -66,6 +79,7 @@ export default function setSplitText() {
           trigger: title.parentElement?.parentElement,
           toggleActions: ToggleAction,
           start: TriggerStart,
+          once: true,
         },
         duration: 0.8,
         ease: "power2.inOut",
@@ -75,6 +89,4 @@ export default function setSplitText() {
       }
     );
   });
-
-  ScrollTrigger.addEventListener("refresh", () => setSplitText());
 }
