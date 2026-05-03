@@ -1,7 +1,6 @@
 import { lazy, PropsWithChildren, Suspense, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollSmoother } from "gsap-trial/ScrollSmoother";
 import About from "./About";
 import Career from "./Career";
 import Contact from "./Contact";
@@ -14,7 +13,7 @@ import Work from "./Work";
 import setSplitText from "./utils/splitText";
 import { useLoading } from "../context/LoadingProvider";
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+gsap.registerPlugin(ScrollTrigger);
 
 const TechStack = lazy(() => import("./TechStack"));
 
@@ -24,13 +23,11 @@ const MainContainer = ({ children }: PropsWithChildren) => {
     window.innerWidth > 1024
   );
 
-  /* SplitText + ScrollTrigger must run after loading ends and ScrollSmoother is active */
   useEffect(() => {
     if (isLoading || window.innerWidth < 900) return;
     let raf = 0;
     const run = () => {
       ScrollTrigger.refresh();
-      ScrollSmoother.refresh(true);
       setSplitText();
     };
     raf = requestAnimationFrame(() => {
@@ -44,7 +41,6 @@ const MainContainer = ({ children }: PropsWithChildren) => {
       setIsDesktopView(window.innerWidth > 1024);
       if (isLoading || window.innerWidth < 900) return;
       ScrollTrigger.refresh();
-      ScrollSmoother.refresh(true);
       setSplitText();
     };
     resizeHandler();

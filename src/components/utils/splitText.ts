@@ -1,14 +1,16 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollSmoother } from "gsap-trial/ScrollSmoother";
-import { SplitText } from "gsap-trial/SplitText";
+import {
+  splitElementToChars,
+  splitElementToWords,
+} from "./customTextSplit";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface ParaElement extends HTMLElement {
   anim?: gsap.core.Animation;
-  split?: SplitText;
+  splitRevert?: () => void;
 }
-
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
 
 export default function setSplitText() {
   ScrollTrigger.config({ ignoreMobileResize: true });
@@ -16,18 +18,17 @@ export default function setSplitText() {
   const paras: NodeListOf<ParaElement> = document.querySelectorAll(".para");
   const titles: NodeListOf<ParaElement> = document.querySelectorAll(".title");
 
-  /* Fire as soon as the section enters from below (readable against ScrollSmoother) */
   const TriggerStart =
     window.innerWidth <= 1024 ? "top 75%" : "top bottom";
   const ToggleAction = "play pause resume reverse";
 
   paras.forEach((para: ParaElement) => {
-    /* About body: keep a single normal paragraph (SplitText lines/words break flow) */
     if (para.closest(".about-section")) {
       if (para.anim) {
         para.anim.progress(1).kill();
-        para.split?.revert();
       }
+      para.splitRevert?.();
+      para.splitRevert = undefined;
       para.classList.add("visible");
       return;
     }
@@ -35,17 +36,15 @@ export default function setSplitText() {
     para.classList.add("visible");
     if (para.anim) {
       para.anim.progress(1).kill();
-      para.split?.revert();
     }
+    para.splitRevert?.();
+    para.splitRevert = undefined;
 
-    const paraSplit = new SplitText(para, {
-      type: "lines,words",
-      linesClass: "split-line",
-    });
-    para.split = paraSplit;
+    const { words, splitRevert } = splitElementToWords(para);
+    para.splitRevert = splitRevert;
 
     para.anim = gsap.fromTo(
-      paraSplit.words,
+      words,
       { autoAlpha: 0, y: 80 },
       {
         autoAlpha: 1,
@@ -63,17 +62,21 @@ export default function setSplitText() {
     );
   });
   titles.forEach((title: ParaElement) => {
+    /* “WHAT I DO” uses nested spans for layout; do not replace with char spans */
+    if (title.closest(".whatIDO")) {
+      return;
+    }
     if (title.anim) {
       title.anim.progress(1).kill();
-      title.split?.revert();
     }
-    const titleSplit = new SplitText(title, {
-      type: "chars,lines",
-      linesClass: "split-line",
-    });
-    title.split = titleSplit;
+    title.splitRevert?.();
+    title.splitRevert = undefined;
+
+    const { chars, splitRevert } = splitElementToChars(title);
+    title.splitRevert = splitRevert;
+
     title.anim = gsap.fromTo(
-      titleSplit.chars,
+      chars,
       { autoAlpha: 0, y: 80, rotate: 10 },
       {
         autoAlpha: 1,
